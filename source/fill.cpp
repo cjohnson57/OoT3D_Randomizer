@@ -549,9 +549,17 @@ static void RandomizeDungeonRewards() {
   if (ShuffleRewards.Is(REWARDSHUFFLE_END_OF_DUNGEON)) {
     //get stones and medallions
     std::vector<ItemKey> rewards = FilterAndEraseFromPool(ItemPool, [](const ItemKey i) {return ItemTable(i).GetItemType() == ITEMTYPE_DUNGEONREWARD;});
-    AssumedFill(rewards, dungeonRewardLocations);
+    if (Settings::Logic.Is(LOGIC_VANILLA)) { //Place dungeon rewards in vanilla locations
+      for (LocationKey loc : dungeonRewardLocations) {
+        Location(loc)->PlaceVanillaItem();
+      }
+    } else { //Randomize dungeon rewards with assumed fill
+      AssumedFill(rewards, dungeonRewardLocations);
+    }
+    
     for (size_t i = 0; i < dungeonRewardLocations.size(); i++) {
       const auto index = Location(dungeonRewardLocations[i])->GetPlacedItem().GetItemID() - baseOffset;
+      CitraPrint(std::to_string(index));
       rDungeonRewardOverrides[i] = index;
 
       //set the player's dungeon reward on file creation instead of pushing it to them at the start.
@@ -559,6 +567,7 @@ static void RandomizeDungeonRewards() {
       //before opening up their file
       if (i == dungeonRewardLocations.size()-1) {
         LinksPocketRewardBitMask = bitMaskTable[index];
+        CitraPrint(std::to_string(LinksPocketRewardBitMask));
       }
     }
   } else if (LinksPocketItem.Is(LINKSPOCKETITEM_DUNGEON_REWARD)) {
@@ -720,8 +729,10 @@ void VanillaFill() {
   //Perform minimum needed initialization
   AreaTable_Init();
   GenerateLocationPool();
+  GenerateItemPool();
   GenerateStartingInventory();
   //Place vanilla item in each location
+  RandomizeDungeonRewards();
   for (LocationKey loc : allLocations) {
     Location(loc)->PlaceVanillaItem();
   }
