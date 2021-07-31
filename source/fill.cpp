@@ -559,7 +559,6 @@ static void RandomizeDungeonRewards() {
     
     for (size_t i = 0; i < dungeonRewardLocations.size(); i++) {
       const auto index = Location(dungeonRewardLocations[i])->GetPlacedItem().GetItemID() - baseOffset;
-      CitraPrint(std::to_string(index));
       rDungeonRewardOverrides[i] = index;
 
       //set the player's dungeon reward on file creation instead of pushing it to them at the start.
@@ -567,7 +566,6 @@ static void RandomizeDungeonRewards() {
       //before opening up their file
       if (i == dungeonRewardLocations.size()-1) {
         LinksPocketRewardBitMask = bitMaskTable[index];
-        CitraPrint(std::to_string(LinksPocketRewardBitMask));
       }
     }
   } else if (LinksPocketItem.Is(LINKSPOCKETITEM_DUNGEON_REWARD)) {
