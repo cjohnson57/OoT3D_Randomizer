@@ -1404,7 +1404,7 @@ namespace SFX {
     void InitSFXRandomizer() {
         // Set the sequences to default
         for (int i = 0; i < SFX_COUNT; i++) {
-            sfxData.rSFXOverrides_All[i] = SFX_BASE + i;
+            sfxData.rSFXOverrides_All[i] = SFX_BASE + 1380;
         }
         // Set the amount of sequence types for each category
         for (size_t i = 0; i < SEQTYPE_COUNT; i++) {
